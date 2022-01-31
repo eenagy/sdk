@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { BigNumber } from 'ethers';
+import { BigNumber } from '@ethersproject/bignumber';
 import { PaymentToken } from '../src/types';
 
 import {
@@ -7,8 +7,10 @@ import {
   toPaddedHex,
   bytesToNibbles,
   prepareBatch,
-  unpackPrice
+  unpackPrice,
 } from '../src/utils';
+
+// Azrael - v1 collateral
 
 describe('Utils', () => {
   it('packs usual domain', () => {
@@ -86,10 +88,10 @@ describe('Utils', () => {
   it('unpacks to correct number - 1.0001', () => {
     const price = '1.0001';
     const packedPrice = packPrice(price);
-    expect(packedPrice).to.be.equal("0x00010001");
+    expect(packedPrice).to.be.equal('0x00010001');
     const unpackedPrice = unpackPrice(packedPrice);
     expect(unpackedPrice.toString()).to.be.equal(price);
-  })
+  });
 
   it('unpacks to correct number - 2874.3580', () => {
     const price = '2874.3580';
