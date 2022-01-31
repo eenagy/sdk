@@ -11,6 +11,12 @@ export enum PaymentToken {
   RENT,
 }
 
+
+export enum NFTStandard {
+  E721,
+  E1155,
+}
+
 export interface IReNFT {
   lend(
     nftAddress: string[],
