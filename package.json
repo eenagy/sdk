@@ -16,7 +16,7 @@
     "test": "tsdx test",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
-    "postinstall": "yarn install && tsdx build",
+    "postinstall": "npx tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
