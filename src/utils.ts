@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 
-import { PaymentToken } from './types';
+import { PaymentToken, NFTStandard } from './types';
 import { MAX_PRICE, NUM_BITS_IN_BYTE } from './consts';
 
 // consts that predominantly pertain to this file
@@ -67,11 +67,11 @@ export const toPaddedHex = (number: number, bitsize: number) => {
 const scaleDecimal = (num: string) => {
   const numLen = num.length;
   const maxLen = 4;
-  for (let i = 0; i < (maxLen - numLen); i++) {
+  for (let i = 0; i < maxLen - numLen; i++) {
     num = num + '0';
   }
   return Number(num);
-}
+};
 
 /**
  * Converts a number into the format that is acceptable by the ReNFT contract.
@@ -110,20 +110,17 @@ const validateSameLength = (...args: any[]) => {
   return true;
 };
 
-const decimalToPaddedHexString = (
-  number: number,
-  bitsize: number
-): string => {
+const decimalToPaddedHexString = (number: number, bitsize: number): string => {
   const byteCount = Math.ceil(bitsize / 8);
   const maxBinValue = Math.pow(2, bitsize) - 1;
-  if (bitsize > 32) throw "number above maximum value";
+  if (bitsize > 32) throw new Error('number above maximum value');
   if (number < 0) number = maxBinValue + number + 1;
   return (
-    "0x" +
+    '0x' +
     (number >>> 0)
       .toString(16)
       .toUpperCase()
-      .padStart(byteCount * 2, "0")
+      .padStart(byteCount * 2, '0')
   );
 };
 
@@ -139,14 +136,14 @@ export const unpackPrice = (price: BigNumberish) => {
 
   let decimalStr = decimal.toString();
   const decimalLen = decimalStr.length;
-  const maxLen = 4
-  for (let i = 0; i < (maxLen - decimalLen); i++) {
+  const maxLen = 4;
+  for (let i = 0; i < maxLen - decimalLen; i++) {
     decimalStr = '0' + decimalStr;
   }
 
   const number = parseFloat(`${whole}.${decimalStr}`);
   return number;
-}
+};
 
 type IObjectKeysValues =
   | string[]
@@ -160,6 +157,7 @@ interface IObjectKeys {
 }
 
 interface PrepareBatch extends IObjectKeys {
+  nftStandard?: NFTStandard[];
   nftAddress: string[];
   tokenID: BigNumber[];
   amount?: number[];
@@ -169,6 +167,7 @@ interface PrepareBatch extends IObjectKeys {
   paymentToken?: PaymentToken[];
   rentDuration?: number[];
   lendingID?: BigNumber[];
+  rentingID?: BigNumber[];
 }
 
 /**
@@ -198,6 +197,7 @@ export const prepareBatch = (args: PrepareBatch) => {
 
   const createNft = (nftAddress: string, i: number) => {
     nfts.set(nftAddress, {
+      nftStandard: args.nftStandard ? [args.nftStandard[i]] : undefined,
       nftAddress: [nftAddress],
       tokenID: [args.tokenID[i]],
       amount: args.amount ? [args.amount[i]] : undefined,
@@ -211,6 +211,7 @@ export const prepareBatch = (args: PrepareBatch) => {
       paymentToken: args.paymentToken ? [args.paymentToken[i]] : undefined,
       rentDuration: args.rentDuration ? [args.rentDuration[i]] : undefined,
       lendingID: args.lendingID ? [args.lendingID[i]] : undefined,
+      rentingID: args.rentingID ? [args.rentingID[i]] : undefined,
     });
     return nfts;
   };
