@@ -17,6 +17,7 @@
     "lint": "tsdx lint",
     "format": "prettier --write './src/**/*' './test/**/*'",
     "prepare": "tsdx build",
+    "postinstall": "npx tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
